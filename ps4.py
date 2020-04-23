@@ -1,6 +1,7 @@
 # 6.00 Problem Set 4
 #
 # Caesar Cipher Skeleton
+# Completed by Egbeyong Tanjong
 #
 import string
 import random
@@ -121,6 +122,20 @@ def build_coder(shift):
     (The order of the key-value pairs may be different.)
     """
     ### TODO.
+    alphabet =  {' ': 'c', 'A': 'D', 'C': 'F', 'B': 'E', 'E': 'H', 'D': 'G', 'G': 'J',
+    'F': 'I', 'I': 'L', 'H': 'K', 'K': 'N', 'J': 'M', 'M': 'P', 'L': 'O',
+    'O': 'R', 'N': 'Q', 'Q': 'T', 'P': 'S', 'S': 'V', 'R': 'U', 'U': 'X',
+    'T': 'W', 'W': 'Z', 'V': 'Y', 'Y': 'A', 'X': ' ', 'Z': 'B', 'a': 'd',
+    'c': 'f', 'b': 'e', 'e': 'h', 'd': 'g', 'g': 'j', 'f': 'i', 'i': 'l',
+    'h': 'k', 'k': 'n', 'j': 'm', 'm': 'p', 'l': 'o', 'o': 'r', 'n': 'q',
+    'q': 't', 'p': 's', 's': 'v', 'r': 'u', 'u': 'x', 't': 'w', 'w': 'z',
+    'v': 'y', 'y': 'a', 'x': ' ', 'z': 'b'}
+    
+    # convert string to int to be able to manipulate it
+    #temp = alphabet.copy()
+    for letter in alphabet.keys():
+        #temp[letter] = alphabet[letter] + 3x = chr(ord(ch) + 3)
+    return alphabet
 
 def build_encoder(shift):
     """
@@ -332,4 +347,4 @@ def decrypt_fable():
 #
 #
 #
-
+print(build_coder(3))
