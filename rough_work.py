@@ -121,14 +121,23 @@ print (result)
 """
 
 
-def logBase2(n):    
-    """assumes that n is a positive int      
-    returns a float that approximates the log base 2 of n"""    
+"""
+def logBase2(n): 
+"""
+"""
+
+assumes that n is a positive int      
+returns a float that approximates the log base 2 of n
+    
+"""
+"""
     import math     
     return math.log(n, 2) 
  
-def f(n):     
-    """assumes n is an int"""   
+def f(n):  
+    """
+"""assumes n is an int"""   
+"""
     if n < 1:        
         return     
     curDigit = int(logBase2(n))   
@@ -145,12 +154,10 @@ def f(n):
 for i in range(3):     
     print (f(i))
 
+"""
 
-
-
-
-
-
+hand= {'d':2,'o':1,'g':3,'d':2}
+print(hand['d'])
 
 
 
