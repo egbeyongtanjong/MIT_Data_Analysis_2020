@@ -5,6 +5,7 @@
 #
 import string
 import random
+import re
 
 WORDLIST_FILENAME = "words.txt"
 
@@ -122,20 +123,74 @@ def build_coder(shift):
     (The order of the key-value pairs may be different.)
     """
     ### TODO.
-    alphabet =  {' ': 'c', 'A': 'D', 'C': 'F', 'B': 'E', 'E': 'H', 'D': 'G', 'G': 'J',
-    'F': 'I', 'I': 'L', 'H': 'K', 'K': 'N', 'J': 'M', 'M': 'P', 'L': 'O',
-    'O': 'R', 'N': 'Q', 'Q': 'T', 'P': 'S', 'S': 'V', 'R': 'U', 'U': 'X',
-    'T': 'W', 'W': 'Z', 'V': 'Y', 'Y': 'A', 'X': ' ', 'Z': 'B', 'a': 'd',
-    'c': 'f', 'b': 'e', 'e': 'h', 'd': 'g', 'g': 'j', 'f': 'i', 'i': 'l',
-    'h': 'k', 'k': 'n', 'j': 'm', 'm': 'p', 'l': 'o', 'o': 'r', 'n': 'q',
-    'q': 't', 'p': 's', 's': 'v', 'r': 'u', 'u': 'x', 't': 'w', 'w': 'z',
-    'v': 'y', 'y': 'a', 'x': ' ', 'z': 'b'}
+    alphabet = {}
     
-    # convert string to int to be able to manipulate it
-    #temp = alphabet.copy()
-    for letter in alphabet.keys():
-        #temp[letter] = alphabet[letter] + 3x = chr(ord(ch) + 3)
-    return alphabet
+    #Fills alphabet dictionary with uppercase characters
+    for i in range (65,91):
+        alphabet[chr(i)] = chr(i)
+    
+    #Adds space character to alphabet dictionary
+    alphabet[' ']=' '
+    
+    #Adds lowercase characters to alphabet dictionary
+    for i in range (97,123):
+        alphabet[chr(i)] = chr(i)
+
+    
+    if shift == 0:
+        return alphabet
+    
+    elif shift > 0:
+    #ASCII characters and numbers A=65, Z=90, a=97, z=122
+    #use chr(int) to convert from 
+        if shift < 0:
+            shift = abs(shift)
+        temp = alphabet.copy()
+        for key in alphabet.keys():
+            if key != ' ' and ord(key) <= 90 - shift:
+                temp[key] = alphabet[chr(shift+ord(key))]
+            elif key != ' ' and ord(key) <= 90:
+                val = shift+ord(key)
+                if val == 91:
+                    temp[key] = ' '
+                else:
+                    temp[key] = alphabet[chr(val%90 + 63)]
+            elif key != ' ' and ord(key) <= 122 - shift:
+                temp[key] = alphabet[chr(shift+ord(key))]
+            elif key != ' ' and ord(key) <= 122:
+                val = shift+ord(key)
+                if val == 123:
+                    temp[key] = ' '
+                else:
+                    temp[key] = alphabet[chr(val%122 + 95)]
+            else:
+                temp[key] = alphabet[chr(97+shift-1)]
+    
+    else:
+        temp = alphabet.copy()
+        for key in alphabet.keys():
+            if key != ' ' and ord(key) - abs(shift) >= 97:
+                temp[key] = alphabet[chr(ord(key)-abs(shift))]
+            elif key != ' ' and ord(key) > 96 and ord(key) - abs(shift) > 70:
+                val = ord(key) - abs(shift)
+                if val == 96:
+                    temp[key] = ' '
+                else:
+                    temp[key] = alphabet[chr(val + 27)]
+            elif key != ' ' and ord(key) - abs(shift) >= 65:
+                temp[key] = alphabet[chr(ord(key)-abs(shift))]
+            elif key != ' ' and ord(key) - abs(shift) > 38:
+                val = ord(key) - abs(shift)
+                if val == 64:
+                    temp[key] = ' '
+                else:
+                    temp[key] = alphabet[chr(val + 27)]
+            else:
+                temp[key] = alphabet[chr(122 - abs(shift) + 1)]
+    
+    return temp
+
+    
 
 def build_encoder(shift):
     """
@@ -165,7 +220,11 @@ def build_encoder(shift):
     HINT : Use build_coder.
     """
     ### TODO.
-
+    
+    temp = build_coder(shift)
+    
+    return temp
+    
 def build_decoder(shift):
     """
     Returns a dict that can be used to decode an encrypted text. For example, you
@@ -195,7 +254,9 @@ def build_decoder(shift):
     HINT : Use build_coder.
     """
     ### TODO.
- 
+    shift = -int(shift)
+    temp = build_coder(shift)
+    return temp
 
 def apply_coder(text, coder):
     """
@@ -212,6 +273,15 @@ def apply_coder(text, coder):
     'Hello, world!'
     """
     ### TODO.
+    newStr = ''
+    ref = coder
+    for c in text:
+        if c in ref.keys():
+            newStr += ref[c]
+        else:
+            newStr += c
+    return newStr
+    
   
 
 def apply_shift(text, shift):
@@ -232,6 +302,7 @@ def apply_shift(text, shift):
     'Apq hq hiham a.'
     """
     ### TODO.
+    return apply_coder(text, build_encoder(shift))
    
 #
 # Problem 2: Codebreaking.
@@ -253,7 +324,34 @@ def find_best_shift(wordlist, text):
     'Hello, world!'
     """
     ### TODO
-   
+    max_num = 0
+    best_shift = 0
+    count = 0
+    res = []
+    s = ''
+    
+    #Creates all 27 possible decoder alphabets 
+    for i in range(0,27):
+        s = apply_coder(text, build_decoder(i))
+        
+        #removes all non alphanumeric characters
+        # \W == [^a-zA-Z0-9_]
+        s = re.sub(r'\W+', ' ', s)
+        #print(s)
+        
+        res = s.split( )
+        #print(res)
+        for word in res:
+            if word in wordlist:
+               # print(word)
+                count += 1
+        if count > max_num:
+            max_num = count
+            best_shift = i
+           # print(max_num)
+        count = 0   
+        #print(max_num)
+    return best_shift
 #
 # Problem 3: Multi-level encryption.
 #
@@ -274,7 +372,12 @@ def apply_shifts(text, shifts):
     'JufYkaolfapxQdrnzmasmRyrpfdvpmEurrb?'
     """
     ### TODO.
- 
+    for tup in shifts:
+        if tup[0] == 0:
+            text = apply_shift(text,tup[1])
+        else:
+            text = text[0:tup[0]]+apply_shift(text[tup[0]:],tup[1])
+    return text
 #
 # Problem 4: Multi-level decryption.
 #
@@ -308,6 +411,39 @@ def find_best_shifts(wordlist, text):
     >>> print apply_shifts(s, shifts)
     Do Androids Dream of Electric Sheep?
     """
+    tup = []
+    start = 0
+    s = text
+    
+    #print(start_positions)
+    while start < len(s):
+            #s = text[start:]
+            guess1 = find_best_shift(wordlist,s)
+            print(guess1)
+            guess = find_best_shifts_rec(wordlist,s,0)
+            #guess1 = find_best_shift(wordlist,s)
+            
+            #print(guess1)
+            #print(guess)
+            
+            s = apply_coder(s, build_decoder(guess[1]))
+            tup.append((guess))
+            m = ' '
+            m = apply_coder(m, build_coder(guess[1]))
+            
+            for i in range(len(s)):
+                if s[i] == m:
+                    start = i+1
+                    break
+                else:
+                    start = len(text)
+            s = s[start:]
+            
+            
+    return tup
+    
+    
+    
 
 def find_best_shifts_rec(wordlist, text, start):
     """
@@ -324,6 +460,11 @@ def find_best_shifts_rec(wordlist, text, start):
     returns: list of tuples.  each tuple is (position in text, amount of shift)
     """
     ### TODO.
+    
+    
+    shift = find_best_shift(wordlist,text[start:])
+    
+    return (start, shift)
 
 
 def decrypt_fable():
@@ -347,4 +488,45 @@ def decrypt_fable():
 #
 #
 #
-print(build_coder(3))
+
+"""
+#TEST commands
+text = "This is a test."
+
+#print(apply_shift(text,8))
+#s = apply_coder('Hello, world!', build_encoder(8))
+s = apply_coder("Do Androids Dream of Electric Sheep?", build_encoder(6))
+print(s)
+guess = find_best_shift(wordlist, s)
+print(guess)
+
+print(apply_coder(s, build_decoder(guess)))
+"""
+"""
+s = apply_shifts("Do Androids Dream of Electric Sheep?", [(0,6), (3, 18), (12, 16)])
+print()
+print(s)
+
+"""
+
+#Next test
+s = apply_shifts("Do Androids Dream of Electric Sheep?", [(0,6), (3, 18), (12, 16)])
+print(s)
+shifts = find_best_shifts(wordlist, s) 
+shifts = find_best_shift(wordlist, s) 
+print(shifts)
+#print (apply_shifts(s, shifts))
+
+
+"""
+#Yet another test case
+s = random_scrambled(wordlist, 3) 
+print(s)
+shifts = find_best_shifts(wordlist, s)
+print(shifts)
+print(apply_shifts(s, shifts))
+"""
+
+
+
+
