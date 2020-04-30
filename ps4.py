@@ -515,7 +515,7 @@ print(s)
 shifts = find_best_shifts(wordlist, s) 
 shifts = find_best_shift(wordlist, s) 
 print(shifts)
-#print (apply_shifts(s, shifts))
+print (apply_shifts(s, shifts))
 
 
 """
