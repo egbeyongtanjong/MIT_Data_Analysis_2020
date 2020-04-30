@@ -241,7 +241,7 @@ for c in text:
 
 print(newStr)
 """
-
+"""
 s = "Good morning"
 s = s[0:2] + s[5]
 print(s)
@@ -253,9 +253,14 @@ for i in range(len(s)):
     if s[i] == ' ':
         start_positions.append(i+1)
 print(start_positions)
+"""
 
+s = [1,2,3,1,5]
 
+d = list(set(s))
 
+print(s)
+print(d)
 
 
 
