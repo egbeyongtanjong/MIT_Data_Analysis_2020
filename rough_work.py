@@ -254,14 +254,48 @@ for i in range(len(s)):
         start_positions.append(i+1)
 print(start_positions)
 """
+import string
 
+word = "Goal!s of Brittany's are good"
+print(string.punctuation)
 s = [1,2,3,1,5]
 
+for num in s:
+    yield num
+    
+    
+    
 d = list(set(s))
 
+word = word.lower()
 print(s)
 print(d)
 
+text = ''
+
+for c in word:
+    if c in string.punctuation:
+        c = ' '
+        text += c
+    else:
+        text += c
+text = text.split()
+print(text)
+
+p ='goal'
+
+print(p in text)
+
+#print(1<>1)   # <> means !=
+
+import scrapy # Change here
 
 
+class NgaSpider(scrapy.Spider): # Change here too
+    name = "NgaSpider"
+    host = "http://bbs.ngacn.cc/"
+    start_urls = ["http://bbs.ngacn.cc/thread.php?fid=406",]
 
+
+    def parse(self, response):
+        print ("response.body")
