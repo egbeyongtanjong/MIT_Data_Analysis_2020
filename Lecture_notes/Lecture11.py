@@ -222,7 +222,8 @@ class UG(LSUPerson): #UG is an undergraduate LSU student
 
 class G(LSUPerson):
     pass                #A graduate student is an LSUPerson with no special property
-    
+
+"""    
 p1 = UG('Barbara Beaver')  
 p2 = UG('Sue Wong') 
 p3 = G('Sue Wong') 
@@ -238,7 +239,7 @@ print(p1.__lt__(p4))
 print(p4.isStudent()) 
 print(p1)  
     
-    
+"""   
     
 
 
